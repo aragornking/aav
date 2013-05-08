@@ -1,0 +1,25 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+	<Script file="AceGUI-3.0-1.0.0.lua"/>
+	<Script file="widgets\AceGUIWidget-Button-1.0.0.lua"/>
+	<Script file="widgets\AceGUIWidget-CheckBox-1.0.0.lua"/>
+	<Script file="widgets\AceGUIWidget-ColorPicker-1.0.0.lua"/>
+	<Script file="widgets\AceGUIWidget-DropDownGroup-1.0.0.lua"/>
+	<Script file="widgets\AceGUIWidget-DropDown-1.0.0.lua"/>
+	<Script file="widgets\AceGUIWidget-DropDown-Items-1.0.0.lua"/>
+	<Script file="widgets\AceGUIWidget-EditBox-1.0.0.lua"/>
+	<Script file="widgets\AceGUIWidget-Frame-1.0.0.lua"/>
+	<Script file="widgets\AceGUIWidget-Heading-1.0.0.lua"/>	
+	<Script file="widgets\AceGUIWidget-InlineGroup-1.0.0.lua"/>	
+	<Script file="widgets\AceGUIWidget-Keybinding-1.0.0.lua"/>	
+	<Script file="widgets\AceGUIWidget-ScrollFrame-1.0.0.lua"/>
+	<Script file="widgets\AceGUIWidget-SimpleGroup-1.0.0.lua"/>	
+	<Script file="widgets\AceGUIWidget-Slider-1.0.0.lua"/>	
+	<Script file="widgets\AceGUIWidget-TabGroup-1.0.0.lua"/>	
+	<Script file="widgets\AceGUIWidget-TreeGroup-1.0.0.lua"/>
+	<Script file="widgets\AceGUIWidget-Label-1.0.0.lua"/>
+	<Script file="widgets\AceGUIWidget-MultiLineEditBox-1.0.0.lua"/>
+	<Script file="widgets\AceGUIWidget-BlizOptionsGroup-1.0.0.lua"/>
+	<Script file="widgets\AceGUIWidget-InteractiveLabel-1.0.0.lua"/>
+	<Script file="widgets\AceGUIWidget-Icon-1.0.0.lua"/>
+</Ui>
