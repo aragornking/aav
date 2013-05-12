@@ -27,7 +27,7 @@ local UISpecialFrames = UISpecialFrames
 
 local _G = getfenv()
 
-local AceGUI = LibStub("AceGUI-3.0")
+local AceGUI = LibStub("AceGUI-3.0.0")
 
 local Version = 10
 ---------------------

@@ -1,7 +1,7 @@
 --[[ $Id: AceGUIWidget-DropDown.lua 793 2009-04-07 09:26:44Z nevcairiel $ ]]--
 local min, max, floor = math.min, math.max, math.floor
 
-local AceGUI = LibStub("AceGUI-3.0")
+local AceGUI = LibStub("AceGUI-3.0.0")
 
 local function fixlevels(parent,...)
 	local i = 1

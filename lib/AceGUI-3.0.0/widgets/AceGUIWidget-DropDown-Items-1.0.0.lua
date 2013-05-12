@@ -1,6 +1,6 @@
 --[[ $Id: AceGUIWidget-DropDown-Items.lua 656 2008-05-31 11:47:08Z nargiddley $ ]]--
 
-local AceGUI = LibStub("AceGUI-3.0")
+local AceGUI = LibStub("AceGUI-3.0.0")
 
 local function fixlevels(parent,...)
 	local i = 1

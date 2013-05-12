@@ -4,7 +4,7 @@
 -- @release $Id: AceConfigDialog-3.0.lua 1049 2012-04-02 13:22:10Z mikk $
 
 local LibStub = LibStub
-local MAJOR, MINOR = "AceConfigDialog-3.0", 57
+local MAJOR, MINOR = "AceConfigDialog-3.0.0", 57
 local AceConfigDialog, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 
 if not AceConfigDialog then return end
@@ -17,8 +17,8 @@ AceConfigDialog.frame.apps = AceConfigDialog.frame.apps or {}
 AceConfigDialog.frame.closing = AceConfigDialog.frame.closing or {}
 AceConfigDialog.frame.closeAllOverride = AceConfigDialog.frame.closeAllOverride or {}
 
-local gui = LibStub("AceGUI-3.0")
-local reg = LibStub("AceConfigRegistry-3.0")
+local gui = LibStub("AceGUI-3.0.0")
+local reg = LibStub("AceConfigRegistry-3.0.0")
 
 -- Lua APIs
 local tconcat, tinsert, tsort, tremove, tsort = table.concat, table.insert, table.sort, table.remove, table.sort

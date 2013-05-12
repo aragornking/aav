@@ -1,4 +1,4 @@
-local AceGUI = LibStub("AceGUI-3.0")
+local AceGUI = LibStub("AceGUI-3.0.0")
 
 --------------------------
 -- Button		        --
