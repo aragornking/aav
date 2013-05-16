@@ -935,18 +935,19 @@ end
 -- @param type resource changed (mana, ragem ...)
 --function atroxArenaViewer:UNIT_MANA(event, unit)
 function atroxArenaViewer:UNIT_POWER(event, unit, type)
+--[[
 	if (type ~= "MANA") then
 		return
 	end
-	
+]]--	
+	local power_type, _ = UnitPowerType(unit)
 	local player = M:getDudesData()[UnitGUID(unit)]
 	if (player) then --and (player.mana > (UnitMana(unit)/UnitManaMax(unit))) then
-		
-		local mana = math.floor((UnitMana(unit)/UnitManaMax(unit))*100)
+		local mana = math.floor((UnitPower(unit)/UnitPowerMax(unit))*100)
 		if not (mana > player.mana - AAV_MANATRESHOLD and mana < player.mana + AAV_MANATRESHOLD) then
 			player.mana = mana
 			local u = M:getGUIDtoNumber(UnitGUID(unit))
-			if (u) then self:createMessage(self:getDiffTime(), "17," .. u .. "," .. mana) end
+			if (u) then self:createMessage(self:getDiffTime(), "17," .. u .. "," .. mana .. "," .. power_type) end
 		end
 	end
 end
