@@ -746,6 +746,15 @@ function atroxArenaViewer:CHAT_MSG_BG_SYSTEM_NEUTRAL(event, msg)
 	end
 end
 
+function atroxArenaViewer:ARENA_PREP_OPPONENT_SPECIALIZATIONS(event, ...)
+	local num_oponents = GetNumArenaOpponentSpecs()
+	for i=1, num_oponents do
+		local spec_id = GetArenaOpponentSpec(i)
+		if (spec_id > 0) then
+			local _, spec, _, specIcon, _, _, class = GetSpecializationInfoByID(specID);
+		end
+	end
+end
 
 function atroxArenaViewer:ZONE_CHANGED_NEW_AREA(event, unit)
 	
@@ -754,6 +763,7 @@ function atroxArenaViewer:ZONE_CHANGED_NEW_AREA(event, unit)
 	if (GetZonePVPInfo() == "arena") then
 	
 		self:RegisterEvent("CHAT_MSG_BG_SYSTEM_NEUTRAL")
+		self:RegisterEvent("ARENA_PREP_OPPONENT_SPECIALIZATIONS")
 		
 		atroxArenaViewerData.current.inArena = true
 		atroxArenaViewerData.current.entered = self:getCurrentTime()
@@ -767,6 +777,7 @@ function atroxArenaViewer:ZONE_CHANGED_NEW_AREA(event, unit)
 			self:handleEvents("unregister")
 			self:handleQueueTimer("stop")
 			self:UnregisterEvent("CHAT_MSG_BG_SYSTEM_NEUTRAL")
+			self:UnregisterEvent("ARENA_PREP_OPPONENT_SPECIALIZATIONS")
 			
 			if (atroxArenaViewerData.current.record) then
 				atroxArenaViewerData.data = atroxArenaViewerData.data or {}
@@ -1045,12 +1056,8 @@ function atroxArenaViewer:ARENA_OPPONENT_UPDATE(event, unit, type)
 		if (not u) then
 			local key, player = M:updateMatchPlayers(2, unit)
 			self:sendPlayerInfo(key, player)
-			
-			--self:ScheduleTimer("initArenaMatchUnits", AAV_INITOFFTIME, {unit, 2})
-			--self:initArenaMatchUnits({unit, 2})
 		else
 			-- if character vanishes and reappears
-			--self:initArenaMatchUnits({unit, 2})
 			self:createMessage(self:getDiffTime(), "18," .. u .. ",2")
 		end
 		
@@ -1353,8 +1360,6 @@ function atroxArenaViewer:playMatch(num)
 		if ((vmajor < AAV_VERSIONMAJOR) or (vmajor == AAV_VERSIONMAJOR and vminor < AAV_VERSIONMINOR) or (vmajor == AAV_VERSIONMAJOR and vminor == AAV_VERSIONMINOR and vbugfix < AAV_VERSIONBUGFIX)) then
 			StaticPopup_Show("AAV_PLAYOLDMATCHES_DIALOG")
 		end
-		
-		--T:handleTimer("start")
 	else
 		print("Error - bad match data.")
 	end

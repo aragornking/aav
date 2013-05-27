@@ -25,7 +25,6 @@ function AAV_MatchStub:new()
 	self.data = {}
 	
 	self.map = 0 -- default
-	--self.map = GetZoneText()
 	for k,v in pairs(AAV_COMM_MAPS) do
 		if (GetZoneText() == v) then
 			self.map = k
@@ -40,13 +39,11 @@ end
 -- as of 1.1.7 buffs and debuffs arent saved to variables anymore.
 -- @param mid matchid
 function AAV_MatchStub:saveToVariable(matchid)
-
 	for k,v in pairs(self) do
 		if (k ~= "buffs" and k ~= "debuffs") then
 			atroxArenaViewerData.data[matchid][k] = v
 		end
 	end
-
 end
 
 ----
@@ -74,9 +71,17 @@ function AAV_MatchStub:newDude(unit, team, max)
 	if (self.buffs[id]) then self.buffs[id] = nil else self.buffs[id] = {} end
 	if (self.debuffs[id]) then self.debuffs[id] = nil else self.debuffs[id] = {} end
 	
-	self.combatans.dudes[UnitGUID(unit)].name = UnitName(unit)
-	_, self.combatans.dudes[UnitGUID(unit)].class = UnitClass(unit)
-	_, self.combatans.dudes[UnitGUID(unit)].race = UnitRace(unit)
+	local name, realm = UnitName(unit)
+	if (realm == nil) then
+		realm = GetRealmName()
+	end
+	local _, class = UnitClass(unit)
+	local _, race = UnitRace(unit)
+
+	self.combatans.dudes[UnitGUID(unit)].name = name
+	self.combatans.dudes[UnitGUID(unit)].realm = realm
+	self.combatans.dudes[UnitGUID(unit)].class = class
+	self.combatans.dudes[UnitGUID(unit)].race = race
 	self.combatans.dudes[UnitGUID(unit)].team = team -- 1 = friendly, 0 = hostile
 	self.combatans.dudes[UnitGUID(unit)].player = UnitIsPlayer(unit)
 	self.combatans.dudes[UnitGUID(unit)].spec = ""
@@ -89,9 +94,6 @@ function AAV_MatchStub:newDude(unit, team, max)
 	self.combatans.dudes[UnitGUID(unit)].hdone = 0
 	self.combatans.dudes[UnitGUID(unit)].hcrit = 0
 	
-	if (atroxArenaViewerData.current.broadcast) then
-		
-	end
 	return UnitGUID(unit), self.combatans.dudes[UnitGUID(unit)]
 end
 
@@ -259,7 +261,6 @@ end
 -- sets the match end from the first and the last data.
 -- as of 1.1.7 brackets are verified if they consist of 2, 3 or 5 and not nil.
 function AAV_MatchStub:setMatchEnd()
-	
 	local max, a, b = table.getn(self.data), 0, 0
 	if (self.data[1] and max) then
 		a = AAV_Util:split(self.data[1], ",")
