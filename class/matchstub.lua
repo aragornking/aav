@@ -58,7 +58,6 @@ function AAV_MatchStub:setBracket()
 	self.bracket = bracket
 end
 
-
 ----
 -- inserts a new match member.
 -- @param unit unitGUID
@@ -85,6 +84,7 @@ function AAV_MatchStub:newDude(unit, team, max)
 	self.combatans.dudes[UnitGUID(unit)].team = team -- 1 = friendly, 0 = hostile
 	self.combatans.dudes[UnitGUID(unit)].player = UnitIsPlayer(unit)
 	self.combatans.dudes[UnitGUID(unit)].spec = ""
+	self.combatans.dudes[UnitGUID(unit)].spec_icon = -1
 	self.combatans.dudes[UnitGUID(unit)].ID = id
 	self.combatans.dudes[UnitGUID(unit)].mana = 100
 	self.combatans.dudes[UnitGUID(unit)].starthpmax = UnitHealthMax(unit)
@@ -95,30 +95,6 @@ function AAV_MatchStub:newDude(unit, team, max)
 	self.combatans.dudes[UnitGUID(unit)].hcrit = 0
 	
 	return UnitGUID(unit), self.combatans.dudes[UnitGUID(unit)]
-end
-
-----
--- adds a single dude to the match players list.
--- @param key GUID
--- @param dude table
-function AAV_MatchStub:addDude(key, dude)
-	if (self.combatans.dudes[key]) then self.combatans.dudes[key] = nil else self.combatans.dudes[key] = {} end
-	if (self.buffs[id]) then self.buffs[id] = nil else self.buffs[id] = {} end
-	if (self.debuffs[id]) then self.debuffs[id] = nil else self.debuffs[id] = {} end
-	
-	self.combatans.dudes[key].name = dude.name
-	_, self.combatans.dudes[key].class = dude.class
-	_, self.combatans.dudes[key].race = dude.race
-	self.combatans.dudes[key].team = dude.team
-	self.combatans.dudes[key].player = dude.player
-	self.combatans.dudes[key].ID = dude.ID
-	self.combatans.dudes[key].mana = dude.mana
-	self.combatans.dudes[key].starthpmax = dude.starthpmax
-	self.combatans.dudes[key].hp = dude.hp
-	self.combatans.dudes[key].hpmax = dude.hpmax
-	self.combatans.dudes[key].ddone = dude.ddone
-	self.combatans.dudes[key].hdone = dude.hdone
-	self.combatans.dudes[key].hcrit = dude.hcrit
 end
 
 ----
@@ -142,6 +118,19 @@ end
 -- @return dude data
 function AAV_MatchStub:getDudesData()
 	return self.combatans.dudes
+end
+
+----
+-- returns the data for the dude with key uuid
+-- @parm uuid player id
+-- @return dude data
+function AAV_MatchStub:getDudeData(uuid)
+	for k,v in pairs(self:getDudesData()) do
+		if (k == guid and v.player) then
+			return v
+		end
+	end
+	return nil
 end
 
 ----

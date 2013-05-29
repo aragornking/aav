@@ -1,4 +1,3 @@
-﻿
 atroxArenaViewer = LibStub("AceAddon-3.0.0"):NewAddon("atroxArenaViewer", "AceComm-3.0.0", "AceEvent-3.0.0", "AceTimer-3.0.0", "AceSerializer-3.0.0")
 
 local L = LibStub("AceLocale-3.0.0"):GetLocale("atroxArenaViewer", false)
@@ -136,8 +135,6 @@ StaticPopupDialogs["AAV_PLAYOLDMATCHES_DIALOG"] = {
 	hideOnEscape = true,
 }
 
-
-
 function atroxArenaViewer:OnInitialize()
 	
 	atroxArenaViewerData = atroxArenaViewerData or {
@@ -178,7 +175,6 @@ function atroxArenaViewer:OnInitialize()
     self:RegisterEvent("UPDATE_BATTLEFIELD_STATUS")
     
 end
-
 
 function atroxArenaViewer:OnEnable()
 
@@ -350,7 +346,6 @@ function atroxArenaViewer:lookupBroadcast(prefix, msg, dist, sender)
 		T:removeAllCC()
 		T:removeAllCooldowns()
 		T:createPlayer(T:getCurrentBracket(), 1, true)
-		--T:setMapText(sender .. ": " .. AAV_COMM_MAP[sd.map])
 		T:handleSeeker("hide")
 		T:setOnUpdate("start")
 	
@@ -483,7 +478,6 @@ function atroxArenaViewer:sendPlayerInfo(key, data)
 	if (atroxArenaViewerData.current.broadcast) then
 		message["dude"] = {
 			event = AAV_COMM_EVENT["cmd_updateplayer"],
-			--bracket = self:getCurrentBracket(),
 			guid = key,
 			dude = data,
 		}
@@ -497,7 +491,6 @@ function atroxArenaViewer:sendAllPlayerInfo(sender)
 	message["dudes"] = {
 		target = sender,
 		event = AAV_COMM_EVENT["cmd_updateallplayers"],
-		--bracket = self:getCurrentBracket(),
 		dudes = M:getDudesData(),
 		map = self:getCurrentMapId(),
 	}
@@ -511,13 +504,10 @@ function atroxArenaViewer:sendNewMatchInfo()
 		event = AAV_COMM_EVENT["cmd_newmatch"],
 		target = nil,
 		version = nil,
-		--bracket = self:getCurrentBracket(),
-		--map = M:getCurrentMap(),
 	}
 	
 	self:SendCommMessage(AAV_COMM_LOOKUPBROADCAST, self:Serialize(message["std"]), self:getCommMethod(), nil)
 	message["std"].bracket = nil
-	--message["std"].map = nil
 end
 
 function atroxArenaViewer:changeBroadcast()
@@ -537,10 +527,8 @@ function atroxArenaViewer:changeRecording()
 		else
 			print("Aktion in der Arena nicht möglich.")
 		end
-		--if (atroxArenaViewerData.current.inArena == true) then self:handleEvents("stop") end -- [#18] removed
 	else
 		atroxArenaViewerData.current.record = true
-		--if (atroxArenaViewerData.current.inArena == true) then self:handleEvents("start") end -- [#18] removed
 		print(L.CMD_ENABLE_RECORDING)
 	end
 end
@@ -562,31 +550,7 @@ end
 ----
 -- status 1 = in queue, in arena: message board; 2 = entered
 function atroxArenaViewer:UPDATE_BATTLEFIELD_STATUS(event, status)
-	
 	if (atroxArenaViewerData.current.broadcast or atroxArenaViewerData.current.record and M) then
-		--[[
-		if (atroxArenaViewerData.current.broadcast and status == 1 and currentstate == 2) then
-		-- unqueue
-			currentstate = 1
-			message["std"] = {
-				event = AAV_COMM_EVENT["cmd_status"],
-				target = nil,
-				version = nil,
-				state = currentstate,
-			}
-			self:SendCommMessage(AAV_COMM_LOOKUPBROADCAST, self:Serialize(message["std"]), self:getCommMethod(), nil)
-			message["std"].state = nil
-		elseif (atroxArenaViewerData.current.broadcast and status == 1 and not atroxArenaViewerData.current.inArena) then
-			currentstate = 2
-			message["std"] = {
-				event = AAV_COMM_EVENT["cmd_status"],
-				target = nil,
-				version = nil,
-				state = currentstate,
-			}
-			self:SendCommMessage(AAV_COMM_LOOKUPBROADCAST, self:Serialize(message["std"]), self:getCommMethod(), nil)
-			message["std"].state = nil
-		--]]
 		if (atroxArenaViewerData.current.broadcast and status == 1 and currentstate ~= 2) then
 			currentstate = 2
 			message["std"] = {
@@ -614,7 +578,6 @@ function atroxArenaViewer:UPDATE_BATTLEFIELD_STATUS(event, status)
 					end
 				end
 				if not (found) then
-					--local teamName, oldRating, newRating, teamSkill = GetBattlefieldTeamInfo(i)
 					if (teamName ~= "") then
 						M:setTeams(1, teamName, newRating, newRating - oldRating, teamSkill)
 					else
@@ -627,7 +590,6 @@ function atroxArenaViewer:UPDATE_BATTLEFIELD_STATUS(event, status)
 						event = AAV_COMM_EVENT["cmd_matchend"],
 						match = M:getTeams(),
 						dudes = M:getDudesData(),
-						--bracket = self:getCurrentBracket(),
 					}
 					self:SendCommMessage(AAV_COMM_LOOKUPBROADCAST, self:Serialize(message["stats"]), self:getCommMethod(), nil)
 				end
@@ -666,6 +628,7 @@ function atroxArenaViewer:CHAT_MSG_BG_SYSTEM_NEUTRAL(event, msg)
 			for i = 1, 5 do
 				if (UnitExists("raid" .. i)) then
 					local key, player = M:updateMatchPlayers(1, "raid" .. i)
+					self:queueInspection("raid" .. i)
 					self:sendPlayerInfo(key, player)
 				end
 			end
@@ -746,14 +709,19 @@ function atroxArenaViewer:CHAT_MSG_BG_SYSTEM_NEUTRAL(event, msg)
 	end
 end
 
-function atroxArenaViewer:ARENA_PREP_OPPONENT_SPECIALIZATIONS(event, ...)
-	local num_oponents = GetNumArenaOpponentSpecs()
-	for i=1, num_oponents do
-		local spec_id = GetArenaOpponentSpec(i)
+function atroxArenaViewer:INSPECT_READY(unit)
+	if unit then
+		local spec_id = GetInspectSpecialization(unit)
 		if (spec_id > 0) then
-			local _, spec, _, specIcon, _, _, class = GetSpecializationInfoByID(specID);
+			local _, spec, _, specIcon, _, _, class = GetSpecializationInfoByID(spec_id);
+			local dude = M:getDudeData(UnitGUID(unit))
+			if (dude) then
+				dude.spec = spec
+				dude.spec_icon = specIcon
+			end
 		end
 	end
+	ClearInspectPlayer()
 end
 
 function atroxArenaViewer:ZONE_CHANGED_NEW_AREA(event, unit)
@@ -763,7 +731,7 @@ function atroxArenaViewer:ZONE_CHANGED_NEW_AREA(event, unit)
 	if (GetZonePVPInfo() == "arena") then
 	
 		self:RegisterEvent("CHAT_MSG_BG_SYSTEM_NEUTRAL")
-		self:RegisterEvent("ARENA_PREP_OPPONENT_SPECIALIZATIONS")
+		self:RegisterEvent("INSPECT_READY")
 		
 		atroxArenaViewerData.current.inArena = true
 		atroxArenaViewerData.current.entered = self:getCurrentTime()
@@ -777,7 +745,7 @@ function atroxArenaViewer:ZONE_CHANGED_NEW_AREA(event, unit)
 			self:handleEvents("unregister")
 			self:handleQueueTimer("stop")
 			self:UnregisterEvent("CHAT_MSG_BG_SYSTEM_NEUTRAL")
-			self:UnregisterEvent("ARENA_PREP_OPPONENT_SPECIALIZATIONS")
+			self:UnregisterEvent("INSPECT_READY")
 			
 			if (atroxArenaViewerData.current.record) then
 				atroxArenaViewerData.data = atroxArenaViewerData.data or {}
@@ -817,7 +785,6 @@ function atroxArenaViewer:handleEvents(val)
 		self:RegisterEvent("UNIT_HEALTH")
 		self:RegisterEvent("UNIT_POWER") -- new in 4.0.3
 		self:RegisterEvent("ARENA_OPPONENT_UPDATE")
-		--self:RegisterEvent("UPDATE_BATTLEFIELD_SCORE")
 		self:RegisterEvent("UNIT_NAME_UPDATE")
 		self:RegisterEvent("UNIT_AURA")
 		atroxArenaViewerData.current.inFight = true
@@ -827,10 +794,8 @@ function atroxArenaViewer:handleEvents(val)
 	elseif (val == "unregister") then
 		self:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 		self:UnregisterEvent("UNIT_HEALTH")
-		--self:UnregisterEvent("UNIT_MANA") -- deprecated
 		self:UnregisterEvent("UNIT_POWER") -- new in 4.0.3
 		self:UnregisterEvent("ARENA_OPPONENT_UPDATE")
-		--self:UnregisterEvent("UPDATE_BATTLEFIELD_SCORE")
 		self:UnregisterEvent("UNIT_NAME_UPDATE")
 		self:UnregisterEvent("UNIT_AURA")
 		atroxArenaViewerData.current.inFight = false
@@ -843,6 +808,38 @@ end
 -- @return T playstub
 function atroxArenaViewer:getPlayer()
 	return T
+end
+
+----
+-- queue player for inspection
+-- @param unit to be inspected
+function atroxArenaViewer:queueInspection(unit)
+	if not unit or not CanInspect(unit) or not UnitIsConnected(unit) then
+		return
+	end
+	NotifyInspect(unit)
+end
+
+----
+-- used to query the spec for given enemy player.
+-- @param player_id GUID for the unit
+-- @param player the player table
+function atroxArenaViewer:updateEnemySpec(uuid, dude)
+	if not dude then
+		return
+	end
+	local num_oponents = GetNumArenaOpponentSpecs()
+	for i=1, num_oponents do
+		local current_id = UnitGUID("arena" .. i)
+		if (current_id == uuid) then
+			local spec_id = GetArenaOpponentSpec(i)
+			if (spec_id > 0) then
+				local _, spec, _, specIcon, _, _, class = GetSpecializationInfoByID(spec_id);
+				dude.spec = spec
+				dude.spec_icon = specIcon
+			end
+		end
+	end
 end
 
 ----
@@ -916,7 +913,6 @@ end
 -- repeated function that sends all collected data in a defined period.
 function atroxArenaViewer:queueMatchData()
 	if (#queue > 0) then
-	--print(table.concat(queue, "^"))
 		self:SendCommMessage(AAV_COMM_HANDLEMATCHDATA, table.concat(queue, "^"), self:getCommMethod(), nil)
 		
 		-- empty queue
@@ -943,16 +939,10 @@ end
 -- @param event
 -- @param unit
 -- @param type resource changed (mana, ragem ...)
---function atroxArenaViewer:UNIT_MANA(event, unit)
 function atroxArenaViewer:UNIT_POWER(event, unit, type)
---[[
-	if (type ~= "MANA") then
-		return
-	end
-]]--	
 	local power_type, _ = UnitPowerType(unit)
 	local player = M:getDudesData()[UnitGUID(unit)]
-	if (player) then --and (player.mana > (UnitMana(unit)/UnitManaMax(unit))) then
+	if (player) then
 		local mana = math.floor((UnitPower(unit)/UnitPowerMax(unit))*100)
 		if not (mana > player.mana - AAV_MANATRESHOLD and mana < player.mana + AAV_MANATRESHOLD) then
 			player.mana = mana
@@ -1055,6 +1045,7 @@ function atroxArenaViewer:ARENA_OPPONENT_UPDATE(event, unit, type)
 	if (type == "seen") then
 		if (not u) then
 			local key, player = M:updateMatchPlayers(2, unit)
+			self:updateEnemySpec(key, player)
 			self:sendPlayerInfo(key, player)
 		else
 			-- if character vanishes and reappears
@@ -1071,15 +1062,6 @@ function atroxArenaViewer:ARENA_OPPONENT_UPDATE(event, unit, type)
 		
 	end
 end
-
-----
--- triggered, when an arena match ended (3 times).
---[[
-function atroxArenaViewer:UPDATE_BATTLEFIELD_SCORE(event, unit)
-	--self:handleEvents("unregister")
-	
-end
---]]
 
 function atroxArenaViewer:COMBAT_LOG_EVENT_UNFILTERED(event, ...)
 	local timestamp, type, sourceGUID, sourceName, sourceFlags, destGUID, destName, destFlags, spellId, spellName, spellSchool, amount, overkill, school, resisted, blocked, absorbed, critical, overhealing, extraSpellID, extraSpellName, extraSchool
@@ -1395,7 +1377,6 @@ function atroxArenaViewer:commEvaluateBroadcastData(prefix, msg, dist, sender)
 	end
 end
 
-
 function atroxArenaViewer:executeMatchData(tick, data)
 	local t = tonumber(data[2])
 	
@@ -1405,7 +1386,6 @@ function atroxArenaViewer:executeMatchData(tick, data)
 		T:setMaxBar(tonumber(data[3]), tonumber(data[5]))
 	-- current HP
 	elseif (t == 1) then
-		-- data[2] = action, data[3] = user_id , data[4] = value, data[5] = spell_id, 
 		T:setBar(tonumber(data[3]), tonumber(data[4]))
 		
 	-- max HP
@@ -1415,12 +1395,10 @@ function atroxArenaViewer:executeMatchData(tick, data)
 	-- damage
 	elseif (t == 3 or t == 4 or t == 5 or t == 6) then	
 		T:addFloatingCombatText(tonumber(data[4]), tonumber(data[5]), tonumber(data[6]), 1)
-		--T:addDamage(tonumber(data[4]), tonumber(data[5]))
 		
 	-- heal	
 	elseif (t == 7 or t == 8) then
 		T:addFloatingCombatText(tonumber(data[4]), tonumber(data[5]), tonumber(data[6]), 2)
-		--T:addHeal(tonumber(data[4]), tonumber(data[5]))
 		
 	-- cast starts
 	elseif (t == 9) then
