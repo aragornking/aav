@@ -55,6 +55,7 @@ L.ARENA_LORDAERON				= "로데론의 폐허"
 L.ARENA_BLADEEDGE				= "칼날 투기장"
 L.ARENA_DALARAN					= "달라란 투기장"
 L.ARENA_VALOR					= "용맹의 투기장"
+L.ARENA_TIGER					= "호랑이의 피크"
 
 L.DETAIL_DAMAGEDONE				= "\n피해량"
 L.DETAIL_HIGHDAMAGE				= "최고\n피해량"

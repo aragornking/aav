@@ -55,6 +55,8 @@ L.ARENA_LORDAERON				= "Ruinen von Lordaeron"
 L.ARENA_BLADEEDGE				= "Arena des Schergrats"
 L.ARENA_DALARAN					= "Arena von Dalaran"
 L.ARENA_VALOR					= "Der Ring der Ehre"
+L.ARENA_TIGER					= "Die Tiger Peak"
+
 
 L.DETAIL_DAMAGEDONE				= "zugefügter\nSchaden"
 L.DETAIL_HIGHDAMAGE				= "Höchster\nSchaden"

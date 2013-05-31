@@ -113,6 +113,7 @@ AAV_COMM_MAPS = {
 	[4] = L.ARENA_DALARAN,
 	[5] = L.ARENA_VALOR,
 	[6] = L.ARENA_TOLVIR,
+	[7] = L.ARENA_TIGER,
 }
 
 StaticPopupDialogs["AAV_EXPORT_DIALOG"] = {

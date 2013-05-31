@@ -55,6 +55,7 @@ L.ARENA_LORDAERON				= "Руины Лордерона"
 L.ARENA_BLADEEDGE				= "Арена Острогорья"
 L.ARENA_DALARAN					= "Арена Даларана"
 L.ARENA_VALOR					= "Арена Доблести"
+L.ARENA_TIGER					= "Тигра Пик"
 
 L.DETAIL_DAMAGEDONE				= "Нанесено\nурона"
 L.DETAIL_HIGHDAMAGE				= "Наибольший\nурон"

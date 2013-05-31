@@ -55,6 +55,7 @@ L.ARENA_LORDAERON				= "洛丹伦废墟"
 L.ARENA_BLADEEDGE				= "刀锋山竞技场"
 L.ARENA_DALARAN					= "达拉然竞技场"
 L.ARENA_VALOR					= "勇气竞技场"
+L.ARENA_TIGER					= "勇气竞技场"
 
 L.DETAIL_DAMAGEDONE				= "\n伤害"
 L.DETAIL_HIGHDAMAGE				= "最高\n伤害"

@@ -55,6 +55,7 @@ L.ARENA_LORDAERON				= "Ruines de Lordaeron"
 L.ARENA_BLADEEDGE				= "Arène des Tranchantes"
 L.ARENA_DALARAN					= "Arène de Dalaran"
 L.ARENA_VALOR					= "L'Arène des valeureux"
+L.ARENA_TIGER					= "Le pic de la Tiger"
 
 L.DETAIL_DAMAGEDONE				= "Dégâts\ninfligés"
 L.DETAIL_HIGHDAMAGE				= "Plus haut\ndégât"
