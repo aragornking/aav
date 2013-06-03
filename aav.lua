@@ -1,6 +1,7 @@
 atroxArenaViewer = LibStub("AceAddon-3.0.0"):NewAddon("atroxArenaViewer", "AceComm-3.0.0", "AceEvent-3.0.0", "AceTimer-3.0.0", "AceSerializer-3.0.0")
 
 local L = LibStub("AceLocale-3.0.0"):GetLocale("atroxArenaViewer", false)
+local R = LibStub("LibSpecRoster-1.0")
 
 local M -- AAV_MatchStub
 local T -- AAV_PlayStub
@@ -629,7 +630,7 @@ function atroxArenaViewer:CHAT_MSG_BG_SYSTEM_NEUTRAL(event, msg)
 			for i = 1, 5 do
 				if (UnitExists("raid" .. i)) then
 					local key, player = M:updateMatchPlayers(1, "raid" .. i)
-					self:queueInspection("raid" .. i)
+					self:getPartySpecs("raid" .. i)
 					self:sendPlayerInfo(key, player)
 				end
 			end
@@ -710,21 +711,6 @@ function atroxArenaViewer:CHAT_MSG_BG_SYSTEM_NEUTRAL(event, msg)
 	end
 end
 
-function atroxArenaViewer:INSPECT_READY(unit)
-	if unit then
-		local spec_id = GetInspectSpecialization(unit)
-		if (spec_id > 0) then
-			local _, spec, _, specIcon, _, _, class = GetSpecializationInfoByID(spec_id);
-			local dude = M:getDudeData(UnitGUID(unit))
-			if (dude) then
-				dude.spec = spec
-				dude.spec_icon = specIcon
-			end
-		end
-	end
-	ClearInspectPlayer()
-end
-
 function atroxArenaViewer:ZONE_CHANGED_NEW_AREA(event, unit)
 	
 	CombatLogClearEntries() -- fixes combat log parse overflow problem
@@ -732,7 +718,6 @@ function atroxArenaViewer:ZONE_CHANGED_NEW_AREA(event, unit)
 	if (GetZonePVPInfo() == "arena") then
 	
 		self:RegisterEvent("CHAT_MSG_BG_SYSTEM_NEUTRAL")
-		self:RegisterEvent("INSPECT_READY")
 		
 		atroxArenaViewerData.current.inArena = true
 		atroxArenaViewerData.current.entered = self:getCurrentTime()
@@ -746,7 +731,6 @@ function atroxArenaViewer:ZONE_CHANGED_NEW_AREA(event, unit)
 			self:handleEvents("unregister")
 			self:handleQueueTimer("stop")
 			self:UnregisterEvent("CHAT_MSG_BG_SYSTEM_NEUTRAL")
-			self:UnregisterEvent("INSPECT_READY")
 			
 			if (atroxArenaViewerData.current.record) then
 				atroxArenaViewerData.data = atroxArenaViewerData.data or {}
@@ -814,11 +798,13 @@ end
 ----
 -- queue player for inspection
 -- @param unit to be inspected
-function atroxArenaViewer:queueInspection(unit)
-	if not unit or not CanInspect(unit) or not UnitIsConnected(unit) then
-		return
+function atroxArenaViewer:getPartySpecs(unit)
+	spec, _, class = R:getSpecialization(UnitGUID(unit))
+	local dude = M:getDudeData(UnitGUID(unit))
+	if (dude) then
+		dude.spec = spec
+		dude.spec_icon = specIcon
 	end
-	NotifyInspect(unit)
 end
 
 ----

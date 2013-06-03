@@ -1,0 +1,30 @@
+------------------------------------------------------------------------
+r22 | greltok | 2013-02-15 08:16:52 +0000 (Fri, 15 Feb 2013) | 2 lines
+Changed paths:
+   M /trunk/LibSpecRoster-1.0.lua
+
+Added :rescan() method.
+Fixed documentation errors.
+------------------------------------------------------------------------
+r21 | greltok | 2013-02-11 07:58:07 +0000 (Mon, 11 Feb 2013) | 1 line
+Changed paths:
+   M /trunk/LibSpecRoster-1.0.lua
+
+Handle UNIT_NAME_UPDATE for deferred unit info.
+------------------------------------------------------------------------
+r20 | greltok | 2013-01-29 04:46:28 +0000 (Tue, 29 Jan 2013) | 1 line
+Changed paths:
+   M /trunk/LibSpecRoster-1.0.lua
+
+Trimmed trailing whitespace.
+------------------------------------------------------------------------
+r19 | greltok | 2013-01-19 18:33:10 +0000 (Sat, 19 Jan 2013) | 4 lines
+Changed paths:
+   M /trunk/LibSpecRoster-1.0.lua
+   M /trunk/LibSpecRoster-1.0.toc
+
+Support for fixed roles (for classes that have only one role).
+Added message "LSR_Added" that fires when unit added to roster.
+Fixed blizzRole functionality.
+Removed unused local API references, variables, and tables.
+------------------------------------------------------------------------
