@@ -800,10 +800,9 @@ end
 -- @param unit to be inspected
 function atroxArenaViewer:getPartySpecs(unit)
 	spec, _, class = R:getSpecialization(UnitGUID(unit))
-	local dude = M:getDudeData(UnitGUID(unit))
-	if (dude) then
-		dude.spec = spec
-		dude.spec_icon = specIcon
+	local player = M:getDudesData()[UnitGUID(unit)]
+	if (player) then
+		player.spec = spec
 	end
 end
 
